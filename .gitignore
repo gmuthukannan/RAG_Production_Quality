@@ -1,0 +1,7 @@
+config/secrets.env
+data/chroma_db/
+data/docs/scraped_*
+.venv/
+__pycache__/
+*.pyc
+.env
