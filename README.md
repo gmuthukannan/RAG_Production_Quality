@@ -49,7 +49,7 @@ pip install -r requirements.txt
 Edit `config/secrets.env`:
 
 ```env
-ANTHROPIC_API_KEY=sk-ant-...
+ANTHROPIC_API_KEY=
 ```
 
 ### 3. (Optional) Scrape fresh Gumloop data
