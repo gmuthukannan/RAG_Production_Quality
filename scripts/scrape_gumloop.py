@@ -42,8 +42,7 @@ REQUEST_DELAY = 1.5  # seconds between requests — be polite
 TARGET_URLS = [
     "https://www.gumloop.com",
     "https://www.gumloop.com/pricing",
-    "https://www.gumloop.com/blog",
-    "https://help.gumloop.com",
+    "https://www.gumloop.com/blog"
 ]
 
 
