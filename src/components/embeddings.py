@@ -12,7 +12,8 @@ without touching any pipeline code.
 
 from functools import lru_cache
 
-from langchain_community.embeddings import HuggingFaceEmbeddings
+#from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain_huggingface import HuggingFaceEmbeddings
 from loguru import logger
 
 from config.settings import settings

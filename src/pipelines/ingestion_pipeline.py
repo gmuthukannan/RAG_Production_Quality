@@ -16,7 +16,7 @@ Your app should never be rebuilding the index on a user's request.
 import sys
 from pathlib import Path
 
-from langchain_community.document_loaders import DirectoryLoader, TextLoader
+from langchain_community.document_loaders import TextLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from loguru import logger
 
@@ -27,11 +27,8 @@ from config.settings import settings
 from src.components.vector_store import add_documents, collection_is_empty, get_vector_store
 
 
+
 def load_documents():
-    """
-    Loads all .txt and .md files from the docs directory.
-    DirectoryLoader with glob pattern lets us add new file types trivially.
-    """
     docs_path = Path(settings.docs_dir)
     if not docs_path.exists() or not any(docs_path.iterdir()):
         raise FileNotFoundError(
@@ -39,14 +36,23 @@ def load_documents():
             "Run scripts/scrape_gumloop.py first."
         )
 
-    loader = DirectoryLoader(
-        str(docs_path),
-        glob="**/*.{txt,md}",
-        loader_cls=TextLoader,
-        loader_kwargs={"encoding": "utf-8"},
-        show_progress=True,
-    )
-    docs = loader.load()
+    docs = []
+    for file_path in sorted(docs_path.rglob("*")):
+        if file_path.suffix.lower() not in {".txt", ".md"}:
+            continue
+        try:
+            loader = TextLoader(str(file_path), encoding="utf-8")
+            docs.extend(loader.load())
+            logger.debug(f"Loaded: {file_path.name}")
+        except Exception as e:
+            logger.warning(f"Skipping {file_path.name}: {e}")
+
+    if not docs:
+        raise FileNotFoundError(
+            f"Loader found 0 documents in {docs_path}. "
+            "Check that .txt or .md files exist in that folder."
+        )
+
     logger.info(f"Loaded {len(docs)} raw document(s) from {docs_path}")
     return docs
 
